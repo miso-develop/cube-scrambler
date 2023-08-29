@@ -1,0 +1,104 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+	],
+	"settings": {
+		"todohighlight.keywords": [
+			{
+				"text": "TODO:",
+				"color": "#fff",
+				"backgroundColor": "#fb0",
+			},
+			{
+				"text": "todo:",
+				"color": "#fff",
+				"backgroundColor": "#fb0",
+			},
+			{
+				"text": "DEBUG:",
+				"color": "#fff",
+				"backgroundColor": "#f88",
+			},
+			{
+				"text": "debug:",
+				"color": "#fff",
+				"backgroundColor": "#f88",
+			},
+			{
+				"text": "dbg:",
+				"color": "#fff",
+				"backgroundColor": "#f88",
+			},
+			{
+				"text": "BUG:",
+				"color": "#fff",
+				"backgroundColor": "#f44",
+			},
+			{
+				"text": "bug:",
+				"color": "#fff",
+				"backgroundColor": "#f44",
+			},
+			{
+				"text": "IMPL:",
+				"color": "#fff",
+				"backgroundColor": "#4b4",
+			},
+			{
+				"text": "impl:",
+				"color": "#fff",
+				"backgroundColor": "#4b4",
+			},
+			{
+				"text": "TEST:",
+				"color": "#fff",
+				"backgroundColor": "#44f",
+			},
+			{
+				"text": "test:",
+				"color": "#fff",
+				"backgroundColor": "#44f",
+			},
+			{
+				"text": "MEMO:",
+				"color": "#fff",
+				"backgroundColor": "#08b",
+			},
+			{
+				"text": "memo:",
+				"color": "#fff",
+				"backgroundColor": "#08b",
+			},
+			{
+				"text": "WAIT:",
+				"color": "#fff",
+				"backgroundColor": "#c66"
+			},
+			{
+				"text": "wait:",
+				"color": "#fff",
+				"backgroundColor": "#c66"
+			},
+		],
+		"cSpell.words": [
+			"abortable",
+			"Chample",
+			"Facelet",
+			"Facelets",
+			"microcontroller",
+			"onrun",
+			"sequenciable",
+			"tailwindcss"
+		],
+	},
+	"extensions": {
+		"recommendations": [
+			"editorconfig.editorconfig",
+			"dbaeumer.vscode-eslint",
+			"streetsidesoftware.code-spell-checker",
+			"wayou.vscode-todo-highlight",
+		],
+	},
+}
