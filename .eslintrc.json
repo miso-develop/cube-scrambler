@@ -1,0 +1,35 @@
+{
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"parser": "@typescript-eslint/parser",
+	"env": {
+		"node": true,
+		"es6": true
+	},
+	"rules": {
+		"indent": "off",
+		"linebreak-style": ["error", "unix"],
+		"quotes": ["error", "double", { "allowTemplateLiterals": true }],
+		"eol-last": "error",
+		"no-multiple-empty-lines": ["error", { "max": 3, "maxEOF": 2 }],
+		"no-console": "off",
+		"no-redeclare": "off",
+		"no-constant-condition": "off",
+		
+		"@typescript-eslint/indent": ["error", "tab"],
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-namespace": "off",
+		"@typescript-eslint/no-use-before-define": "off",
+		"@typescript-eslint/explicit-member-accessibility": ["error", { "accessibility": "explicit", "overrides": { "constructors": "off", "accessors": "off" } }],
+		"@typescript-eslint/member-delimiter-style": ["error", { "multiline": { "delimiter": "none" } }],
+		"@typescript-eslint/explicit-function-return-type": "off",
+		"@typescript-eslint/no-unused-vars": "off",
+		
+		"": "off"
+	}
+}
