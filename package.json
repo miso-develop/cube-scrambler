@@ -53,7 +53,7 @@
 		"chalk": "^5.3.0",
 		"cosmiconfig": "^8.2.0",
 		"cosmiconfig-typescript-loader": "^5.0.0",
-		"express": "^4.19.2",
+		"express": "^4.21.2",
 		"min2phase.js": "github:cs0x7f/min2phase.js#c3431fabd961fc2680b2de605ddd99a203665215",
 		"opniz": "^0.3.1",
 		"zod": "^3.22.3"
