@@ -31,7 +31,7 @@ class ArmServo {
 
 class Factories {
 	<<function>>
-	Device, ScrambleDaoそれぞれのインスタンスのファクトリー関数を提供
+	Device, ScrambleDao, WebServerそれぞれのインスタンスのファクトリー関数を提供
 }
 %% Factories --> Device : type
 Factories --> OpnizDevice

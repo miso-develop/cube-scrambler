@@ -1,6 +1,6 @@
 {
 	"name": "cube-scrambler",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"main": "dist/index.js",
 	"engines": {
 		"node": ">=18.x"
@@ -30,10 +30,13 @@
 		"tsb": "npm run typescript:build",
 		"typescript:watch": "npm run typescript:build -- -w",
 		"tsw": "npm run typescript:watch",
+		"pretailwind:build": "npm run update-browserslist-db",
 		"tailwind:build": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --minify",
 		"twb": "npm run tailwind:build",
+		"pretailwind:watch": "npm run update-browserslist-db",
 		"tailwind:watch": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --minify --watch",
 		"tww": "npm run tailwind:watch",
+		"update-browserslist-db": "npx -y update-browserslist-db@latest",
 		"# test": "----------------------------------------------------------------",
 		"test": "vitest --silent",
 		"t": "npm test",

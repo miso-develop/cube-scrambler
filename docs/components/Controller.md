@@ -49,24 +49,13 @@ namespace ApiController_ {
 	class ApiService {
 		APIの具体処理をServiceを元に実装
 	}
-	
-	class WebServer {
-		Expressサーバーの実行、ルーティング登録メソッドの実装
-	}
-	
-	class RpsLimiter {
-		<<static>>
-		WebServerへのRPS制限
-	}
 }
 %% ApiController --> Service : type
 ApiController --> ApiService : [arg] Service
 ApiController --> FaceletsDrawer
-ApiController --> WebServer
+ApiController --> Factories : webServerFactory() => WebServer
 
 %% ApiService --> Service : type
-
-WebServer --> RpsLimiter
 
 
 
@@ -106,5 +95,35 @@ CliView --> FaceletsDrawer
 class Service {
 	各種ビジネスロジックClassをとりまとめてインスタンス化し、API、CLI提供用メソッドを実装
 }
+
+
+
+class Factories {
+	<<function>>
+	Device, ScrambleDao, WebServerそれぞれのインスタンスのファクトリー関数を提供
+}
+%% Factories --> WebServer : type
+Factories --> ExpressServer
+
+
+
+namespace WebServer_ {
+	class WebServer {
+		<<interface>>
+		Webサーバーlisten、ルーティング登録メソッドをもつインターフェース
+	}
+	
+	class ExpressServer {
+		<<static>>
+		WebServerインターフェースのExpress実装
+	}
+	
+	class RpsLimiter {
+		<<static>>
+		WebServerへのRPS制限
+	}
+}
+ExpressServer ..|> WebServer
+ExpressServer --> RpsLimiter
 
 ```

@@ -5,20 +5,29 @@ class Device {
 	<<interface>>
 	Deviceインターフェース
 }
+%% Device --> Servo : type
 
 class OpnizDevice {
 	DeviceインターフェースのOpniz.M5Unified実装
 }
 OpnizDevice ..|> Device
-OpnizDevice --> Servo : [arg] Device
+OpnizDevice --> GeekServo : [arg] Device
 OpnizDevice --> M5DeviceFactory
+%% OpnizDevice --> Device : type
+%% OpnizDevice --> Servo : type
 
 
 
 class Servo {
+	<<interface>>
+	Servoインターフェース
+}
+
+class GeekServo {
 	サーボモーターの角度->PWM変換を実装
 }
-%% Servo --> Device : type
+GeekServo ..|> Servo
+%% GeekServo --> Servo : type
 
 
 

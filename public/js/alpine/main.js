@@ -24,10 +24,11 @@ document.addEventListener("alpine:init", () => {
 	title()
 	tabs()
 	
-	cubeUi()
-	cubeUiSp()
+	Alpine.store("view").isSp() ? cubeUiSp() :cubeUi()
+	
 	cubeFace()
 	cubeMiniFace()
+	
 	colorRing()
 	
 })

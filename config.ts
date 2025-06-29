@@ -4,11 +4,11 @@ export default {
 	// デバイスボタンの動作
 	BUTTON_ACTION: "random",
 	
-	// ポート番号の指定
+	// Web UIポート番号の指定
 	OPNIZ_PORT: 3000, // 任意の空いてるポートを指定（よくわからなければこのままで）
 	SERVER_PORT: 3001, // 任意の空いてるポートを指定（よくわからなければこのままで）
 	
-	// デバイスへ接続するサーボの制御ピン指定
+	// デバイスへ接続するサーボモーターの制御ピン指定
 	STAND_SERVO_PIN: "default",
 	ARM_SERVO_PIN: "default",
 	

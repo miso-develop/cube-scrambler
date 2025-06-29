@@ -1,6 +1,13 @@
 import { cosmiconfig } from "cosmiconfig"
 import { TypeScriptLoader } from "cosmiconfig-typescript-loader"
 
+const CONFIG_FILEPATH = "config.ts"
+
+const InvalidConfigError = Error("Invalid config!")
+const NotFoundConfigError = Error("Config not found!")
+
+
+
 const ENV_TYPE = ["prod", "dev"] as const
 type EnvType = (typeof ENV_TYPE)[number]
 
@@ -27,6 +34,8 @@ const BUTTON_ACTION = [
 	"step7",
 ] as const
 type ButtonAction = (typeof BUTTON_ACTION)[number]
+
+
 
 export type Config = {
 	BUTTON_ACTION: ButtonAction
@@ -59,8 +68,40 @@ export type Config = {
 	LAST_CORRECT_ORIENTATION: boolean
 }
 
-const InvalidConfigError = Error("Invalid config!")
-const NotFoundConfigError = Error("Config not found!")
+
+
+const DEFAULT_CONFIG = {
+	BUTTON_ACTION: "random",
+	OPNIZ_PORT: 3000,
+	SERVER_PORT: 3001,
+	STAND_SERVO_PIN: "default",
+	ARM_SERVO_PIN: "default",
+	STAND_CORRECT_ANGLE: 8,
+	STAND_TURN_ANGLE: 87,
+	ARM_PULL_ANGLE: 175,
+	ARM_HOLD_ANGLE: 224,
+	ARM_RELEASE_ANGLE: 237,
+	ARM_READY_ANGLE: 270,
+	ARM_PULL_SLEEP_MSEC: 200,
+	SERVO_TURN_SLEEP_MSEC: 500,
+	ENV: "prod",
+	DEBUG: false,
+	DEVICE_TYPE: "opniz",
+	STAND_TURN_D_MAX_COUNT: 2,
+	STAND_DIRECTION: -1,
+	STAND_PWM_CHANNEL: 0,
+	ARM_TURN_X_MAX_COUNT: 3,
+	ARM_PWM_CHANNEL: 1,
+	SERVO_FREQUENCY: 400,
+	SERVO_RESOLUTION_BITS: 12,
+	SERVO_SPEC_ANGLE: 270,
+	SERVO_SPEC_PLUS_MAX: 2400,
+	SERVO_SPEC_PLUS_MIN: 580,
+	RPS_LIMITER_RATE: 4,
+	LAST_CORRECT_ORIENTATION: true,
+} as const satisfies Config
+
+
 
 const isConfig = (config: any): config is Config => {
 	return true &&
@@ -98,15 +139,18 @@ const isConfig = (config: any): config is Config => {
 
 
 const loadConfig = async (configFilePath: string): Promise<Config> => {
+	// MEMO: configファイルをロード
 	let result
 	try {
 		result = await cosmiconfig("", { loaders: { ".ts": TypeScriptLoader() }}).load(configFilePath)
 		if (!result) throw Error()
 	} catch (e) {
+		// MEMO: !result以外でもエラー発生し得るからこうしてる？
 		throw NotFoundConfigError
 	}
 	
-	const { config } = result
+	// MEMO: デフォルト値とマージ
+	const config = Object.assign(DEFAULT_CONFIG, result.config)
 	if (!isConfig(config)) throw InvalidConfigError
 	
 	return config
@@ -114,6 +158,5 @@ const loadConfig = async (configFilePath: string): Promise<Config> => {
 
 
 
-const configFilePath = "config.ts"
-const config = await loadConfig(configFilePath)
+const config = await loadConfig(CONFIG_FILEPATH)
 export { config }

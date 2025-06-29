@@ -1,4 +1,3 @@
-import { config } from "../config.js"
 import type { Device } from "../Device/Device.js"
 import { deviceFactory } from "../factories.js"
 import { StandServo } from "./Servo/StandServo.js"
@@ -7,17 +6,13 @@ import { log, dbg, dev, sleep, envBoolean, envNumber, shuffleArray, getYYYYMMDD,
 import { TurnDirection, ArmState, Face, FacePosition, FullFace, FaceLine, CubeState, BASIC_MOVE_LIST, SLICE_MOVE_LIST, WIDE_MOVE_LIST, ROTATION_MOVE_LIST, MOVE_LIST, BasicMove, SliceMove, WideMove, RotationMove, Move, ROBOT_MOVE_LIST, RobotMove, Facelets, Sequence, CubeChampleApiResult, ScrambleData, SCRAMBLE_TYPE, ScrambleType, SCRAMBLE_TYPE_KEYS, SCRAMBLE_TYPE_REVERSE, StepData, ApiServiceFunction, ApiServiceRegistrationFormat, CliServiceFunction, CliServiceRegistrationFormat } from "../types.js"
 
 export class CubeRobot {
-	private readonly _OPNIZ_PORT = config.OPNIZ_PORT
-	
 	public readonly device: Device
 	
 	private _standServo: StandServo
 	private _armServo: ArmServo
 	
 	constructor() {
-		this.device = deviceFactory(this._OPNIZ_PORT)
-		this._standServo = new StandServo(this.device)
-		this._armServo = new ArmServo(this.device)
+		this.device = deviceFactory()
 	}
 	
 	
@@ -29,8 +24,13 @@ export class CubeRobot {
 	
 	
 	public async init(): Promise<void> {
-		await this._standServo.init()
-		await this.ready()
+		this._standServo = new StandServo(this.device)
+		this._armServo = new ArmServo(this.device)
+		
+		await Promise.all([
+			this._standServo.init(),
+			this.ready(),
+		])
 	}
 	
 	public async ready(): Promise<void> {

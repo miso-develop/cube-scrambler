@@ -26,6 +26,10 @@ export const stores = () => {
 			this.selectedFace = direction
 		},
 		
+		isSelected(direction) {
+			return this.selectedFace === direction
+		},
+		
 		facelets() {
 			const color2directionNotation = {
 				yellow:	"U",
@@ -116,7 +120,7 @@ export const stores = () => {
 			const option = {
 				type: "success",
 				position: this.view.isSp() ? "bottom-center" : "top-right",
-				description
+				description,
 			}
 			toast(message, option)
 		},
@@ -124,7 +128,15 @@ export const stores = () => {
 			const option = {
 				type: "danger",
 				position: this.view.isSp() ? "bottom-center" : "top-right",
-				description
+				description,
+			}
+			toast(message, option)
+		},
+		info(message, description = "") {
+			const option = {
+				type: "info",
+				position: this.view.isSp() ? "bottom-center" : "top-right",
+				description,
 			}
 			toast(message, option)
 		},

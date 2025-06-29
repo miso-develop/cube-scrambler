@@ -1,25 +1,25 @@
+import { config } from "../../config.js"
 import { M5Unified } from "opniz/dist/devices/M5Unified.js"
-import type { Device } from "../Device/Device.js"
+import type { Device, Servo } from "../Device.js"
 import { m5DeviceFactory } from "./M5DeviceFactory.js"
-import { Servo } from "./Servo.js"
-import { log, dbg, dev, AbortableSleep, abortableSleep, sleep, abortSleep, envBoolean, envNumber, generateId, shuffleArray, getYYYYMMDD, getHHMMSS, formatJstDate, random, stoppableFunc, sequenciableFuncs, reverseObject, arrayEquals, timeoutClosure, StopWatch, stopWatch } from "../utils.js"
-import { TurnDirection, ArmState, Face, FacePosition, FullFace, FaceLine, CubeState, BASIC_MOVE_LIST, SLICE_MOVE_LIST, WIDE_MOVE_LIST, ROTATION_MOVE_LIST, MOVE_LIST, BasicMove, SliceMove, WideMove, RotationMove, Move, ROBOT_MOVE_LIST, RobotMove, Facelets, Sequence, CubeChampleApiResult, ScrambleData, SCRAMBLE_TYPE, ScrambleType, SCRAMBLE_TYPE_KEYS, SCRAMBLE_TYPE_REVERSE, StepData, ApiServiceFunction, ApiServiceRegistrationFormat, CliServiceFunction, CliServiceRegistrationFormat } from "../types.js"
+import { GeekServo } from "./GeekServo.js"
+import { log, dbg, dev, AbortableSleep, abortableSleep, sleep, abortSleep, envBoolean, envNumber, generateId, shuffleArray, getYYYYMMDD, getHHMMSS, formatJstDate, random, stoppableFunc, sequenciableFuncs, reverseObject, arrayEquals, timeoutClosure, StopWatch, stopWatch } from "../../utils.js"
+import { TurnDirection, ArmState, Face, FacePosition, FullFace, FaceLine, CubeState, BASIC_MOVE_LIST, SLICE_MOVE_LIST, WIDE_MOVE_LIST, ROTATION_MOVE_LIST, MOVE_LIST, BasicMove, SliceMove, WideMove, RotationMove, Move, ROBOT_MOVE_LIST, RobotMove, Facelets, Sequence, CubeChampleApiResult, ScrambleData, SCRAMBLE_TYPE, ScrambleType, SCRAMBLE_TYPE_KEYS, SCRAMBLE_TYPE_REVERSE, StepData, ApiServiceFunction, ApiServiceRegistrationFormat, CliServiceFunction, CliServiceRegistrationFormat } from "../../types.js"
 
 export class OpnizDevice implements Device {
 	private readonly _opniz: M5Unified
-	private readonly _servo: Servo
+	
+	public standServo: Servo
+	public armServo: Servo
+	
 	private readonly _abortableSleep: AbortableSleep
 	
 	private readonly _port: number
 	
-	public STAND_SERVO_PIN: number
-	public ARM_SERVO_PIN: number
-	
-	constructor(port: number) {
-		this._opniz = new M5Unified({ port })
-		this._servo = new Servo(this)
+	constructor() {
+		this._port = config.OPNIZ_PORT
+		this._opniz = new M5Unified({ port: this._port })
 		this._abortableSleep = new AbortableSleep()
-		this._port = port
 		
 		this._opniz.onconnect = async () => {
 			await this._init()
@@ -42,8 +42,12 @@ export class OpnizDevice implements Device {
 	
 	private async _setM5Device(): Promise<void> {
 		const m5Device = await m5DeviceFactory(this._opniz)
-		this.STAND_SERVO_PIN = m5Device.STAND_SERVO_PIN
-		this.ARM_SERVO_PIN = m5Device.ARM_SERVO_PIN
+		
+		const standPwmChannel = config.STAND_PWM_CHANNEL || 0
+		const armPwmChannel = config.ARM_PWM_CHANNEL || 1
+		this.standServo = new GeekServo(this, m5Device.STAND_SERVO_PIN, standPwmChannel)
+		this.armServo = new GeekServo(this, m5Device.ARM_SERVO_PIN, armPwmChannel)
+		
 		this.onrun = m5Device.onrun
 		this.onstop = m5Device.onstop
 	}
@@ -76,16 +80,6 @@ export class OpnizDevice implements Device {
 	
 	
 	
-	public async turn(pin: number, channel: number, angle: number): Promise<void> {
-		await this._servo.turn(pin, channel, angle)
-	}
-	
-	public async ledcWrite(pin: number, duty: number, channel: number, freq: number, resolutionBits: number): Promise<void> {
-		await this._opniz.ledcWrite(pin, duty, channel, freq, resolutionBits)
-	}
-	
-	
-	
 	public emitRun(): void {
 		this._opniz.emit("run")
 	}
@@ -103,4 +97,9 @@ export class OpnizDevice implements Device {
 	public onrun: () => Promise<void> = async () => {}
 	public onstop: (result: boolean) => Promise<void> = async (result: boolean) => {}
 	
+	
+	
+	public async ledcWrite(pin: number, duty: number, channel: number, freq: number, resolutionBits: number): Promise<void> {
+		await this._opniz.ledcWrite(pin, duty, channel, freq, resolutionBits)
+	}
 }

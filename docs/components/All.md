@@ -7,6 +7,7 @@ class index {
 index --> Controller
 
 
+
 class Controller {
 	Serviceのインスタンス化、デバイスへのconnect処理
 	Device Controllerの実行
@@ -48,24 +49,13 @@ namespace ApiController_ {
 	class ApiService {
 		APIの具体処理をServiceを元に実装
 	}
-	
-	class WebServer {
-		Expressサーバーの実行、ルーティング登録メソッドの実装
-	}
-	
-	class RpsLimiter {
-		<<static>>
-		WebServerへのRPS制限
-	}
 }
 %% ApiController --> Service : type
 ApiController --> ApiService : [arg] Service
 ApiController --> FaceletsDrawer
-ApiController --> WebServer
+ApiController --> Factories : webServerFactory() => WebServer
 
 %% ApiService --> Service : type
-
-WebServer --> RpsLimiter
 
 
 
@@ -220,12 +210,14 @@ StepSequenceGenerator --> Min2Phase
 
 class Factories {
 	<<function>>
-	Device, ScrambleDaoそれぞれのインスタンスのファクトリー関数を提供
+	Device, ScrambleDao, WebServerそれぞれのインスタンスのファクトリー関数を提供
 }
 %% Factories --> Device : type
 Factories --> OpnizDevice
 %% Factories --> ScrambleDao : type
 Factories --> ScrambleJsonDao
+%% Factories --> WebServer : type
+Factories --> ExpressServer
 
 
 
@@ -240,6 +232,11 @@ namespace Device_ {
 	}
 	
 	class Servo {
+		<<interface>>
+		Servoインターフェース
+	}
+	
+	class GeekServo {
 		サーボモーターの角度->PWM変換を実装
 	}
 	
@@ -281,11 +278,16 @@ namespace Device_ {
 		対応済みデバイス以外を使用時に指定するM5Deviceインターフェース実装
 	}
 }
-OpnizDevice ..|> Device
-OpnizDevice --> Servo : [arg] Device
-OpnizDevice --> M5DeviceFactory
+%% Device --> Servo : type
 
-%% Servo --> Device : type
+OpnizDevice ..|> Device
+OpnizDevice --> GeekServo : [arg] Device
+OpnizDevice --> M5DeviceFactory
+%% OpnizDevice --> Device : type
+%% OpnizDevice --> Servo : type
+
+GeekServo ..|> Servo
+%% GeekServo --> Servo : type
 
 M5DeviceFactory --> ATOMLite
 M5DeviceFactory --> ATOMS3
@@ -371,7 +373,6 @@ AvatarMotion --> AvatarFace
 
 
 
-
 namespace ScrambleDao_ {
 	class ScrambleDao {
 		<<interface>>
@@ -387,7 +388,29 @@ namespace ScrambleDao_ {
 		JSONデータのload, saveを実装
 	}
 }
-ScrambleJsonDao --> JsonDao
 ScrambleJsonDao ..|> ScrambleDao
+ScrambleJsonDao --> JsonDao
+
+
+
+namespace WebServer_ {
+	class WebServer {
+		<<interface>>
+		Webサーバーlisten、ルーティング登録メソッドをもつインターフェース
+	}
+	
+	class ExpressServer {
+		<<static>>
+		WebServerインターフェースのExpress実装
+	}
+	
+	class RpsLimiter {
+		<<static>>
+		WebServerへのRPS制限
+	}
+}
+ExpressServer ..|> WebServer
+ExpressServer --> RpsLimiter
 
 ```
+

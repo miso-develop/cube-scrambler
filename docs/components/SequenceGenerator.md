@@ -46,7 +46,7 @@ StepSequenceGenerator --> Min2Phase
 
 class Factories {
 	<<function>>
-	Device, ScrambleDaoそれぞれのインスタンスのファクトリー関数を提供
+	Device, ScrambleDao, WebServerそれぞれのインスタンスのファクトリー関数を提供
 }
 %% Factories --> ScrambleDao : type
 Factories --> ScrambleJsonDao
